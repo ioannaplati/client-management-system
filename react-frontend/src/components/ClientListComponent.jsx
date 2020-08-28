@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import ClientService from '../services/ClientService'
 
 class ClientListComponent extends Component {
     constructor(props) {
@@ -7,6 +8,12 @@ class ClientListComponent extends Component {
         this.state = {
             clients: []
         }
+    }
+
+    componentDidMount(){
+        ClientService.getClients().then((res) => {
+            this.setState({clients: res.data});
+        });
     }
 
     render() {
