@@ -10,6 +10,14 @@ class ClientService {
     createClient(client) {
         return axios.post(CLIENT_API_BASE_URL, client);  
     };
+
+    getClientById(id) {
+        return axios.get(CLIENT_API_BASE_URL + "/" + id);
+    };
+
+    updateClient(id, client) {
+        return axios.put(CLIENT_API_BASE_URL + "/" + id, client);
+    };
 }
 
 // export a class object and NOT the class so it can be used directly inside a component

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import ClientService from '../services/ClientService';
 import { useHistory } from 'react-router-dom';
 
-function ClientListComponent(props) {
+function ClientListComponent() {
     const[clients, setClients] = useState([]);
     const history = useHistory();
 
@@ -15,15 +15,15 @@ function ClientListComponent(props) {
         });
     }, []);
 
-    const addClient = () => {
-        history.push('/add-client');
+    const updateClient = (id) => {
+        history.push(`/update-client/${id}`);
     };
 
     return(
         <div>
             <h2 className='text-center'>Clients</h2>
             <div className='row'>
-                <button className='btn btn-primary' onClick={addClient} style={{marginBottom:'10px'}}>Add Client</button>
+                <button className='btn btn-primary' onClick={() => history.push('/add-client') } style={{marginBottom:'10px'}}>Add Client</button>
             </div>
             <div className='row'>
                 <table className='table table-striped table-bordered'>
@@ -42,6 +42,9 @@ function ClientListComponent(props) {
                                     <td>{client.firstName}</td>
                                     <td>{client.lastName}</td>
                                     <td>{client.email}</td>
+                                    <td> 
+                                        <button onClick={() => updateClient(client.id)} className='btn btn-info'> Update</button>
+                                    </td>
                                 </tr>
                             )
                         }

@@ -1,20 +1,34 @@
 import { useHistory } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ClientService from '../services/ClientService';
 
-function CreateClientComponent(){
+function UpdateClientComponent(props) {
     const history = useHistory();
+    const id = props.match.params.id;
     const[firstName, setFirstName] = useState([]);
     const[lastName, setLastName] = useState([]);
     const[email, setEmail] = useState([]);
 
-    const saveClient = (e) => {
+    useEffect(() => {
+        ClientService.getClientById(id).then(res => {
+            let client = res.data;
+            setFirstName(client.firstName);
+            setLastName(client.lastName);
+            setEmail(client.email); 
+        });
+    }, [id]);
+
+    const updateClient = (e) => {
         e.preventDefault();
-        let newClient = {firstName: firstName, lastName: lastName, email: email};
-        
-        ClientService.createClient(newClient).then(res => {
+        let updatedClient = {firstName: firstName, lastName: lastName, email: email};
+
+        ClientService.updateClient(id, updatedClient).then(res => {
             history.push('/clients');
         });
+    };
+
+    const cancel = () => {
+        history.push("/clients");
     };
 
     return(
@@ -22,7 +36,7 @@ function CreateClientComponent(){
             <div className='container'>
                 <div className='row'>
                     <div className='card col-md-6 offset-md-3 offset-md-3' style={{marginTop:'50px'}}>
-                        <h3 className='text-center'>Add Client</h3>
+                        <h3 className='text-center'>Update Client</h3>
                         <div className='card-body'>
                             <form>
                                 <div className='form-group'>
@@ -41,8 +55,8 @@ function CreateClientComponent(){
                                     value={email} onChange={e => setEmail(e.target.value)}></input>
                                 </div>
 
-                                <button className='btn btn-success' onClick={e => saveClient(e)}>Save</button>
-                                <button type='button' className='btn btn-danger' onClick={() => history.push("/clients")} style={{marginLeft:'10px'}}>Cancel</button>
+                                <button className='btn btn-success' onClick={e => updateClient(e)}>Save</button>
+                                <button type='button' className='btn btn-danger' onClick={cancel} style={{marginLeft:'10px'}}>Cancel</button>
                             </form>
                         </div>
                     </div>
@@ -52,4 +66,4 @@ function CreateClientComponent(){
     );
 }
 
-export default CreateClientComponent;
+export default UpdateClientComponent;
