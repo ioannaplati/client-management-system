@@ -1,20 +1,48 @@
 import { useHistory } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ClientService from '../services/ClientService';
 
-function CreateClientComponent(){
+function CreateOrUpdateClientComponent(props){
     const history = useHistory();
+    const id = props.match.params.id;
     const[firstName, setFirstName] = useState([]);
     const[lastName, setLastName] = useState([]);
     const[email, setEmail] = useState([]);
 
-    const saveClient = (e) => {
+    useEffect(() => {
+        if (id !== undefined) {
+            ClientService.getClientById(id).then(res => {
+                let client = res.data;
+                setFirstName(client.firstName);
+                setLastName(client.lastName);
+                setEmail(client.email); 
+            });
+        }
+    }, [id]);
+
+    const saveOrUpdateClient = (e) => {
         e.preventDefault();
-        let newClient = {firstName: firstName, lastName: lastName, email: email};
+        let client = {firstName: firstName, lastName: lastName, email: email};
         
-        ClientService.createClient(newClient).then(res => {
-            history.push('/clients');
-        });
+        if (id === undefined) {
+            ClientService.createClient(client).then(res => {
+                history.push('/clients');
+            });
+        } else {
+            ClientService.updateClient(id, client).then(res => {
+                history.push('/clients');
+            });
+        }
+    };
+
+    const getTitle = () => {
+        if (id === undefined){
+            //Add
+            return <h3 className='text-center'>Add Client</h3>
+        } else {
+            //Update
+            return <h3 className='text-center'>Update Client</h3>
+        }
     };
 
     return(
@@ -22,7 +50,7 @@ function CreateClientComponent(){
             <div className='container'>
                 <div className='row'>
                     <div className='card col-md-6 offset-md-3 offset-md-3' style={{marginTop:'50px'}}>
-                        <h3 className='text-center'>Add Client</h3>
+                        {getTitle()}
                         <div className='card-body'>
                             <form>
                                 <div className='form-group'>
@@ -41,7 +69,7 @@ function CreateClientComponent(){
                                     value={email} onChange={e => setEmail(e.target.value)}></input>
                                 </div>
 
-                                <button className='btn btn-success' onClick={e => saveClient(e)}>Save</button>
+                                <button className='btn btn-success' onClick={e => saveOrUpdateClient(e)}>Save</button>
                                 <button type='button' className='btn btn-danger' onClick={() => history.push("/clients")} style={{marginLeft:'10px'}}>Cancel</button>
                             </form>
                         </div>
@@ -52,4 +80,4 @@ function CreateClientComponent(){
     );
 }
 
-export default CreateClientComponent;
+export default CreateOrUpdateClientComponent;
