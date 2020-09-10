@@ -5,7 +5,9 @@ The data are stored in MySQL database. Hibernate ORM was used for the mapping be
 
 Javascript's Axios HTTP Library was used in order to make the REST API calls from the react app.
 
-To start the application run:
+To start the application:
+
+Make sure that Spring Boot app as well as MySQL Server are running, then start the react app (node.js and npm are required) by running:
 
 `npm start`
 
