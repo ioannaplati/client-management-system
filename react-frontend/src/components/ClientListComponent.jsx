@@ -19,6 +19,15 @@ function ClientListComponent() {
         history.push(`/update-client/${id}`);
     };
 
+    const deleteClient = (id) => {
+        ClientService.deleteClient(id).then((res) => {
+            //If delete was successful remove the client from 'clients'
+            if (res.data.deleted === true){
+                setClients(clients.filter(client => client.id !== id));
+            }
+        });
+    };
+
     return(
         <div>
             <h2 className='text-center'>Clients</h2>
@@ -32,7 +41,7 @@ function ClientListComponent() {
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
-                            <th>Actions</th>
+                            <th style={{width:'25%'}}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,6 +53,7 @@ function ClientListComponent() {
                                     <td>{client.email}</td>
                                     <td> 
                                         <button onClick={() => updateClient(client.id)} className='btn btn-info'> Update</button>
+                                        <button onClick={() => deleteClient(client.id)} className='btn btn-danger' style={{marginLeft:'10px'}}> Delete</button>
                                     </td>
                                 </tr>
                             )

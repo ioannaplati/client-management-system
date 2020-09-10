@@ -18,6 +18,10 @@ class ClientService {
     updateClient(id, client) {
         return axios.put(CLIENT_API_BASE_URL + "/" + id, client);
     };
+
+    deleteClient(id) {
+        return axios.delete(CLIENT_API_BASE_URL + "/" + id);
+    };
 }
 
 // export a class object and NOT the class so it can be used directly inside a component

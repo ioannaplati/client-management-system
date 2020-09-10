@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/")
@@ -45,4 +47,15 @@ public class ClientController {
         Client updatedClient = clientRepository.save(client);
         return ResponseEntity.ok(updatedClient);
     }
+
+    @DeleteMapping("/clients/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteClient(@PathVariable Long id) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Client with id " + id + " does not exist!"));
+        clientRepository.delete(client);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", true);
+        return ResponseEntity.ok(response);
+    }
+
 }
