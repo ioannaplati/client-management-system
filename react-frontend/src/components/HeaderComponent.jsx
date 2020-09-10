@@ -14,8 +14,13 @@ class HeaderComponent extends Component {
             <div>
                 <header>
                     <nav className='navbar navbar-expand-md navbar-dark bg-dark'>
-                        <div>
-                            <h2 className='navbar-brand'>Client Management System</h2>
+                        <a href="/clients" style={{marginTop:'5px'}} className="navbar-brand">Client Management System</a>
+                        <div className="collapse navbar-collapse">
+                            <ul className="navbar-nav mr-auto">
+                                <li className="nav-item active">
+                                    <a className="nav-link" href="/add-client">Add Client <span className="sr-only">(current)</span></a>
+                                </li>
+                            </ul>
                         </div>
                     </nav>
                 </header>

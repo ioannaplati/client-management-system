@@ -7,17 +7,19 @@ function ClientListComponent() {
     const[clients, setClients] = useState([]);
     const history = useHistory();
 
-    // The effect hook is only called initially. After that, 
-    // user has to refresh the page if the client list gets updated.
     useEffect(() => {
-        ClientService.getClients().then((res) => {
-            setClients(res.data);
-        });
-    }, []);
+        let mounted = true;
 
-    const updateClient = (id) => {
-        history.push(`/update-client/${id}`);
-    };
+        ClientService.getClients().then((res) => {  
+            if (mounted) {
+                setClients(res.data);
+            }
+        });
+
+        return () => {
+            mounted = false;
+        };
+    });
 
     const deleteClient = (id) => {
         ClientService.deleteClient(id).then((res) => {
@@ -30,10 +32,7 @@ function ClientListComponent() {
 
     return(
         <div>
-            <h2 className='text-center'>Clients</h2>
-            <div className='row'>
-                <button className='btn btn-primary' onClick={() => history.push('/add-client') } style={{marginBottom:'10px'}}>Add Client</button>
-            </div>
+            <h2 style={{marginTop:'20px'}} className='text-center'>Clients</h2>
             <div className='row'>
                 <table className='table table-striped table-bordered'>
                     <thead>
@@ -41,7 +40,7 @@ function ClientListComponent() {
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
-                            <th style={{width:'25%'}}>Actions</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,8 +51,9 @@ function ClientListComponent() {
                                     <td>{client.lastName}</td>
                                     <td>{client.email}</td>
                                     <td> 
-                                        <button onClick={() => updateClient(client.id)} className='btn btn-info'> Update</button>
+                                        <button onClick={() => history.push(`/update-client/${client.id}`)} className='btn btn-info'> Update</button>
                                         <button onClick={() => deleteClient(client.id)} className='btn btn-danger' style={{marginLeft:'10px'}}> Delete</button>
+                                        <button onClick={() => history.push(`/view-client/${client.id}`)} className='btn btn-primary' style={{marginLeft:'10px'}}> View</button>
                                     </td>
                                 </tr>
                             )
